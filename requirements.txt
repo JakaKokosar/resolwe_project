@@ -1,0 +1,5 @@
+resolwe~=9.0.0
+djangorestframework-reactive~=2.0.1
+django-rest-auth==0.9.0
+django-cors-headers==1.1.0
+Celery==4.1.1
