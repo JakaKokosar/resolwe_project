@@ -1,0 +1,29 @@
+- slug: data-table-upload
+  name: Orange Data Table upload
+  requirements:
+    expression-engine: jinja
+    executor:
+      docker:
+        image: orange_test:latest
+  data_name: '{{ src.file|default("?") }}'
+  version: 0.0.1
+  type: data:table:singlecell
+  category: upload
+  persistence: RAW
+  description: >
+    Upload pickled Orange data table.
+  input:
+    - name: src
+      label: Orange Data Table
+      type: basic:file
+  output:
+    - name: table
+      label: Orange Data Table
+      type: basic:file
+  run:
+    runtime: polyglot
+    language: bash
+    program: |
+      mv {{ src.file_temp }} {{ src.file }}
+      # FILENAME=$(basename {{ src.file }})  # get file name
+      re-save-file table {{ src.file }}

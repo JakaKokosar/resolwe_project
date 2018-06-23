@@ -1,0 +1,105 @@
+- slug: data-filter-counts
+  name: Data filter counts
+  requirements:
+    expression-engine: jinja
+    executor:
+      docker:
+        image: orange_test:latest
+  data_name: "Data filter counts"
+  version: 0.0.1
+  type: data:filter:counts
+  persistence: CACHED
+  description: >
+    Filter cells (rows) by total counts (library size) or number of expressed genes.
+    Filter genes (columns) by total counts mapped to a gene or number of cells in which the gene is expressed in.
+  input:
+    - name: data_table
+      label: Data Table
+      type: data:table
+      required: true
+
+    - name: axis
+      label: Axis
+      type: basic:integer
+      required: true
+
+    - name: measure
+      label: Filter Quality Control Measure
+      type: basic:integer
+      required: true
+
+  output:
+    - name: counts_json
+      label: Filter counts (JSON)
+      type: basic:json
+  run:
+    runtime: polyglot
+    language: bash
+    program: |
+      filter_counts.py \
+       {{ data_table.table.file }} \
+       {{ axis }} \
+       {{ measure }} \
+       data.json
+
+      re-save counts_json data.json
+
+- slug: data-table-filter
+  name: Filtered data table
+  requirements:
+    expression-engine: jinja
+    executor:
+      docker:
+        image: orange_test:latest
+  data_name: 'filtered_data.pickle'
+  version: 0.0.1
+  type: data:table:selection
+  persistence: TEMP
+  input:
+    - name: data_table
+      label: Data Table
+      type: data:table
+      required: true
+
+    - name: counts
+      label: Filter counts
+      type: data:filter:counts
+      required: true
+
+    - name: axis
+      label: Axis
+      type: basic:integer
+      required: true
+
+    - name: upper_limit
+      label: Upper limit
+      type: basic:decimal
+      required: false
+
+    - name: lower_limit
+      label: Lower limit
+      type: basic:decimal
+      required: false
+  output:
+    - name: table
+      label: Filtered data table
+      type: basic:file
+    - name: num_selected
+      label: Number of selected instances
+      type: basic:integer
+  run:
+    runtime: polyglot
+    language: bash
+    program: |
+      echo {{ counts.result.counts }}
+      SELECTION="$(filter_selection.py \
+                   {{ data_table.table.file }} \
+                   {{ counts.counts_json.counts }} \
+                   {{ axis }} \
+                   {{ upper_limit }} \
+                   {{ lower_limit }} \
+                   filtered_data.pickle)"
+
+       re-save-file table filtered_data.pickle
+       re-save num_selected "${SELECTION}"
+

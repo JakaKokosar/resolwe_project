@@ -1,0 +1,128 @@
+- slug: t-sne
+  name: t-Distributed Stochastic Neighbor Embedding  (t-SNE)
+  requirements:
+    expression-engine: jinja
+    executor:
+      docker:
+        image: orange_test:latest
+    resources:
+      cores: 4
+  data_name: "t-sne results"
+  version: 0.0.1
+  type: data:tsne
+  persistence: CACHED
+  description: >
+    This is description of this process
+  input:
+    - name: data_table
+      label: Data Table
+      type: data:table
+      required: true
+
+    - name: pca_components
+      label: PCA components
+      type: basic:integer
+      required: true
+
+    - name: perplexity
+      label: Perplexity
+      type: basic:decimal
+      default: 30.0
+      required: false
+
+    - name: iterations
+      label: Iterations
+      type: basic:integer
+      default: 300
+      required: false
+
+    - name: init
+      label: Init
+      type: data:tsne
+      required: false
+
+  output:
+    - name: embedding_json
+      label: Computed Embedding
+      type: basic:json
+
+    - name: class_var
+      label: Class variable
+      type: basic:json
+
+  run:
+    runtime: polyglot
+    language: bash
+    program: |
+      t_sne.py {{ data_table.table.file }} \
+               {{ pca_components }} \
+               {{ perplexity }} \
+               {{ iterations }} \
+               {{ init.embedding_json.embedding }} \
+               {{ requirements.resources.cores }}\
+               embedding.json \
+               class_var.json
+
+      re-save embedding_json embedding.json
+      re-save class_var class_var.json
+
+
+- slug: t-sne-selection
+  name: t-SNE cell selection
+  requirements:
+    expression-engine: jinja
+    executor:
+      docker:
+        image: orange_test:latest
+  data_name: 'selected_data.pickle'
+  version: 0.0.1
+  type: data:table:selection
+  persistence: TEMP
+  description: >
+    This is description of this process
+  input:
+    - name: data_table
+      label: Data Table
+      type: data:table
+      required: true
+
+    - name: embedding
+      label: Computed embedding
+      type: data:tsne
+      required: true
+
+    - name: selection
+      label: Cell selection
+      type: list:basic:integer
+      required: true
+
+    - name: x_tsne_var
+      label: t-SNE variable
+      type: basic:string
+      default: tsne-x
+      required: false
+
+    - name: y_tsne_var
+      label: t-SNE variable
+      type: basic:string
+      default: tsne-y
+      required: false
+
+  output:
+    - name: table
+      label: Filtered data table
+      type: basic:file
+
+  run:
+    runtime: polyglot
+    language: bash
+    program: |
+      t_sne_selection.py \
+       {{ data_table.table.file }} \
+       {{ embedding.embedding_json.embedding }} \
+       {{ selection }} \
+       {{ x_tsne_var }} \
+       {{ y_tsne_var }} \
+       selected_data.pickle
+
+       re-save-file table selected_data.pickle
