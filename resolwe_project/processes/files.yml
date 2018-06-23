@@ -4,7 +4,7 @@
     expression-engine: jinja
     executor:
       docker:
-        image: orange_test:latest
+        image: jakakokosar/resolwe_project:latest
   data_name: '{{ src.file|default("?") }}'
   version: 0.0.1
   type: data:table:singlecell

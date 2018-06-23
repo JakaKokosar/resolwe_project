@@ -4,7 +4,7 @@
     expression-engine: jinja
     executor:
       docker:
-        image: orange_test:latest
+        image: jakakokosar/resolwe_project:latest
   data_name: "Data filter counts"
   version: 0.0.1
   type: data:filter:counts
@@ -50,7 +50,7 @@
     expression-engine: jinja
     executor:
       docker:
-        image: orange_test:latest
+        image: jakakokosar/resolwe_project:latest
   data_name: 'filtered_data.pickle'
   version: 0.0.1
   type: data:table:selection

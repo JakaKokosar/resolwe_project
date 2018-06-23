@@ -4,7 +4,7 @@
     expression-engine: jinja
     executor:
       docker:
-        image: orange_test:latest
+        image: jakakokosar/resolwe_project:latest
     resources:
       cores: 4
   data_name: "t-sne results"
@@ -54,7 +54,7 @@
     runtime: polyglot
     language: bash
     program: |
-      t_sne.py {{ data_table.table.file }} \
+     t_sne.py {{ data_table.table.file }} \
                {{ pca_components }} \
                {{ perplexity }} \
                {{ iterations }} \
@@ -73,7 +73,7 @@
     expression-engine: jinja
     executor:
       docker:
-        image: orange_test:latest
+        image: orange_resolwe:latest
   data_name: 'selected_data.pickle'
   version: 0.0.1
   type: data:table:selection

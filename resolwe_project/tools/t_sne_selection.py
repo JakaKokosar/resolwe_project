@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """ filter selection script """
 import argparse
 
