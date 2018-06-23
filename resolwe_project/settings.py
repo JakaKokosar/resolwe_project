@@ -212,6 +212,14 @@ FLOW_PROCESSES_DIRS = (
     os.path.join(PROJECT_ROOT, 'resolwe_project', 'processes'),
 )
 
+FLOW_DESCRIPTORS_DIRS = (
+    os.path.join(PROJECT_ROOT, 'resolwe_project', 'descriptors'),
+)
+
+RESOLWE_CUSTOM_TOOLS_PATHS = [
+    os.path.join(PROJECT_ROOT, 'resolwe_project', 'tools'),
+]
+
 FLOW_DOCKER_VOLUME_EXTRA_OPTIONS = {
     'data': 'Z',
     'data_all': 'z',
