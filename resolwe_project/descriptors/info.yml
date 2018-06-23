@@ -1,0 +1,73 @@
+- slug: data_info
+  name: Data Info
+  description: Each data set is described with Data Info schema
+  schema:
+    - name: tabular
+      label: Tabular data
+      group:
+        - name: file_name
+          label: File Name
+          type: basic:string
+
+        - name: title
+          label: Title
+          type: basic:string
+
+        - name: file_size
+          label: File Size
+          type: basic:integer
+
+        - name: cells
+          label: Cells
+          type: basic:integer
+
+        - name: genes
+          label: Genes
+          type: basic:integer
+
+        - name: tax_id
+          label: Organism
+          type: basic:string
+
+        - name: target
+          label: Target
+          type: basic:string
+
+        - name: tags
+          label: Tags
+          type: basic:string
+
+    - name: other
+      label: Other data
+      group:
+        - name: description
+          label: Description
+          type: basic:string
+
+        - name: references
+          label: References
+          type: basic:string
+
+        - name: source
+          label: Source
+          type: basic:string
+
+        - name: collection
+          label: Collection
+          type: basic:string
+
+        - name: version
+          label: Version
+          type: basic:string
+
+        - name: year
+          label: Year
+          type: basic:integer
+
+        - name: instances
+          label: Instances
+          type: basic:integer
+
+        - name: variables
+          label: Variables
+          type: basic:integer
